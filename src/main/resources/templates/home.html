@@ -1,38 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
-<head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    
-    <title>Aide à domicile RH - gestion des salariés</title>
-    <link rel="stylesheet" href="./static/bootstrap.min.css">
-    <link rel="stylesheet" href="./static/font-awesome.css">
-</head>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:replace="~{common :: head}"></head>
 <body>
-
-<div>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="http://localhost:8080/">Aide à domicile RH - gestion des salariés</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li><a href="http://localhost:8080/salaries?page=0&amp;size=10&amp;sortProperty=id&amp;sortDirection=ASC" class="nav-link">Liste des salariés <span class="badge badge-primary">26</span></a></li>
-            </ul>
-
-            <form class="form-inline my-2 my-lg-0" role="search" action="http://localhost:8080/salaries" method="GET">
-                <div class="form-group">
-                    <input name="matricule" class="form-control" placeholder="Rechercher un nom" type="text">
-                </div>
-                <button type="submit" class="btn btn-outline-success ml-2 my-2 my-sm-0">Rechercher</button>
-            </form>
-        </div>
-    </nav>
-</div>
+<div th:replace="~{common :: navbar}"></div>
 
 <div class="container mt-2">
     <div class="jumbotron">
-        <h1>Bienvenue dans l'interface d'administration RH ! (26 salariés)</h1>
+        <h1><span th:text="#{msg.welcome}"></span>(<span th:text="${nbSalaries}"></span>)</h1>
         <p>Voir dans <code>README.md</code> comment configurer la base de données de l'application, la lancer et afficher une page statique.</p>
         <p>Cette application est développée sous forme de Controllers Spring MVC et templates Thymeleaf. Les premiers sont à développer et les seconds à enrichir à partir des pages HTML existantes.</p>
         <p/>
@@ -54,7 +28,7 @@
                 <h4 class="list-group-item-heading">Afficher le nombre de salariés</h4>
                 <p class="list-group-item-text">Dans le titre au-dessus, "26" doit être remplacé par le nombre de salariés réellement en base. Développer ou enrichir la bonne méthode mappée de Controller en utilisant méthode countSalaries() de SalarieAideADomicileService pour cela (à injecter dans le Controller en l'annotannt @Autowired).</p>
             </li>
-            <li class="list-group-item">
+            <li class="list-group-item"> 
                 <h4 class="list-group-item-heading">Afficher la page des détails d'un salarié</h4>
                 <p class="list-group-item-text">Développer ou enrichir le bon Controller pour rendre le template du détail d'un salarié "detail_Salarie.html" en allant à <a href="http://localhost:8080/salaries/1">http://localhost:8080/salaries/1</a>.</p>
             </li>
