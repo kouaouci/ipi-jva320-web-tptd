@@ -26,7 +26,7 @@
         <tbody>
         <tr th:each="salarie : ${salariees}">
           <th scope="row"><span th:utext="${salarie.id}"></span></th>
-          <td><span th:utext="${employee.nom}"></span></td>
+          <td><span th:utext="${salarie.nom}"></span></td>
           <td><a th:href="@{/salaries/{id}(id=${salarie.id})}" class="btn btn-primary ember-view">Détail</a></td>
         </tr>
         </tbody>

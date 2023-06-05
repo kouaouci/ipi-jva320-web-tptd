@@ -53,7 +53,7 @@ public class SalairieController {
         salairieService.creerSalarieAideADomicile ( salarie );
         System.out.println ( salarie );
         model.addAttribute ( "salariees", salairieService.getSalaries () );
-      return  "redirect:/salaries/" + salarie.getId();
+      return  "redirect:/list";
 
     }
 
@@ -82,7 +82,7 @@ public class SalairieController {
         return "detail_Salarie";
 
     }
-
+/*
     @RequestMapping("/salaries")
     public String redirectToListWithParams(@RequestParam(required = false, name = "nom") String nom,
                                            @RequestParam(required = false, name = "page", defaultValue = "1") int page,
@@ -112,7 +112,7 @@ public class SalairieController {
         }
 
         return "list";
-    }
+    }*/
     // Récuperation de la liste des salaries
     @GetMapping(value="salaries")
     public String getSalaries(final ModelMap model) {
