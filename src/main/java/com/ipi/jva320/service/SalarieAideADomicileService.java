@@ -92,7 +92,7 @@ public class SalarieAideADomicileService {
         if (!existantOptional.isEmpty()) {
             throw new SalarieException("Un salarié existe déjà avec l'id " + existant.getId()); // TODO id ou nom ??
         }*/
-       return salarieAideADomicileRepository.save(salarieAideADomicile);
+        return salarieAideADomicileRepository.save(salarieAideADomicile);
     }
 
     public SalarieAideADomicile updateSalarieAideADomicile(SalarieAideADomicile salarieAideADomicile)
@@ -138,8 +138,8 @@ public class SalarieAideADomicileService {
      * @return arrondi à l'entier le plus proche
      */
     public long calculeLimiteEntrepriseCongesPermis(LocalDate moisEnCours, double congesPayesAcquisAnneeNMoins1,
-                                                      LocalDate moisDebutContrat,
-                                                      LocalDate premierJourDeConge, LocalDate dernierJourDeConge) {
+                                                    LocalDate moisDebutContrat,
+                                                    LocalDate premierJourDeConge, LocalDate dernierJourDeConge) {
         // proportion selon l'avancement dans l'année, pondérée avec poids plus gros sur juillet et août (20 vs 8) :
         double proportionPondereeDuConge = Math.max(Entreprise.proportionPondereeDuMois(premierJourDeConge),
                 Entreprise.proportionPondereeDuMois(dernierJourDeConge));

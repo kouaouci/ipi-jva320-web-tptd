@@ -7,14 +7,16 @@ import com.ipi.jva320.service.SalarieAideADomicileService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
 
+import org.springframework.web.bind.annotation.*;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.security.Timestamp;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -27,13 +29,7 @@ public class SalairieController {
     private SalarieAideADomicileRepository salarieAideADomicileRepository;
 
 
-    @RequestMapping(value = {"/salaries", "/salaries.html"})
-    public String listSalarie(final ModelMap model) {
-        model.put ( "salariees", salairieService.getSalaries () );
-        return "list";
-    }
-
-    @GetMapping(value = {"/salaries/{id}", "/salaries/aide/{id}"})
+    @GetMapping("/salaries/{id}")
     public String getSalairieDetails(final ModelMap model, @PathVariable Long id) {
 
 
@@ -49,166 +45,100 @@ public class SalairieController {
 
     }
 
-    @GetMapping("/salaries/{id}/delete")
-    public String deleteSalarie(@PathVariable Long id,final ModelMap model) throws SalarieException {
-        salairieService.deleteSalarieAideADomicile ( Long.valueOf ( id ) );
 
-        return "redirect:/home";
+    @PostMapping("/salaries/save")
+    public String addNewSalarie(@ModelAttribute SalarieAideADomicile salarie, final ModelMap model) throws SalarieException {
+
+        System.out.println ( "hello" );
+        salairieService.creerSalarieAideADomicile ( salarie );
+        System.out.println ( salarie );
+        model.addAttribute ( "salariees", salairieService.getSalaries () );
+      return  "redirect:/salaries/" + salarie.getId();
 
     }
 
-    // afficher le nombre des saliere
-    @GetMapping("/home")
-    public String countSalaries(final ModelMap model) {
-        model.put ( "salarieCount", Long.toString ( salairieService.countSalaries () ) );
-        return "home";
+    @PostMapping("/salaries/update")
+    public String updateSalarie(@ModelAttribute SalarieAideADomicile salarie, final ModelMap model, @RequestParam(required = false) Long id) throws SalarieException {
+        if (id != null) {
+            salarie.setId ( id );
+        }
+
+        System.out.println ( salarie.getId () );
+        salairieService.updateSalarieAideADomicile ( salarie );
+        model.addAttribute ( "salariess", salairieService.getSalaries () );
+        return "redirect:/list";
     }
+
 
     //Ajouter un salarie
-    @GetMapping(value = "/salaries/aide/new")
-    public String salarieInputSave(final ModelMap model) {
-        SalarieAideADomicile salarie = new SalarieAideADomicile();
-        model.put("salarie",salarie);
-        model.put("title","Gestion des salariés");
-        model.put("salarieCount", salairieService.countSalaries());
+    @GetMapping("/salaries/aide/new")
+    public String salarieInputSave( ModelMap model) {
+        System.out.println ( "hello" );
+        SalarieAideADomicile salarie = new SalarieAideADomicile ();
+        salarie.setId ( 0L );
+        model.put ( "details", salarie );
+        model.put ( "action", "save" );
+        model.addAttribute ( "salarie", new SalarieAideADomicile () );
+        return "detail_Salarie";
 
+    }
+
+    @RequestMapping("/salaries")
+    public String redirectToListWithParams(@RequestParam(required = false, name = "nom") String nom,
+                                           @RequestParam(required = false, name = "page", defaultValue = "1") int page,
+                                           @RequestParam(required = false, name = "size", defaultValue = "10") int size,
+                                           @RequestParam(required = false, name = "sortDirection", defaultValue = "desc") String sortDirection,
+                                           @RequestParam(required = false, name = "sortProperty", defaultValue = "id") String sortProperty,
+                                           final ModelMap model) {
+        Pageable pageable;
+        if (Objects.equals(sortDirection, "asc")) {
+            pageable = PageRequest.of(page, size, Sort.by(sortProperty).descending());
+        } else {
+            pageable = PageRequest.of(page, size, Sort.by(sortProperty).ascending());
+        }
+        if (nom == null || nom.length() <= 0) {
+            Page itemPages = salairieService.getSalaries(pageable);
+            model.addAttribute("salariees", itemPages.getContent());
+        } else {
+            model.addAttribute("salariees", salairieService.getSalaries(nom));
+        }
+        model.put("page", page);
+        model.put("sortdir", sortDirection);
+        model.put("sortpro", sortProperty);
+        if (page == 0) {
+            model.put("disable", true);
+        } else {
+            model.put("disable", false);
+        }
+
+        return "list";
+    }
+    // Récuperation de la liste des salaries
+    @GetMapping(value="salaries")
+    public String getSalaries(final ModelMap model) {
+        model.addAttribute("salariees", salairieService.getSalaries());
+        return "list";
+    }
+
+    @RequestMapping("/salaries/aide/new")
+    public String redirectToAdd(final ModelMap model) {
+        SalarieAideADomicile salarie = new SalarieAideADomicile();
+        salarie.setId(0L);
+        model.put("details",salarie );
+       model.put("action", "save");
+        model.addAttribute("salarie", new SalarieAideADomicile());
         return "detail_Salarie";
     }
 
-    @RequestMapping(value="/salaries/save")
-    public String addNewSalarie(@ModelAttribute SalarieAideADomicile salarieAideADomicile, final ModelMap model) throws SalarieException {
-        salairieService.creerSalarieAideADomicile(salarieAideADomicile);
-        model.addAttribute("salariees", salairieService.getSalaries());
-        return "list";
+    @GetMapping("/salaries/{id}/delete")
+    public String deleteSalarie(@PathVariable Long id) throws SalarieException {
+        salairieService.deleteSalarieAideADomicile(id);
+        return "redirect:/home";
     }
-
-    @PostMapping ("/salaries/update")
-    public String updateSalarie(@ModelAttribute SalarieAideADomicile salarieAideADomicile, final ModelMap model,@RequestParam(required = false) Long id) throws SalarieException {
-        if(id!=null && !Objects.equals(id, salarieAideADomicile.getId())) {
-            throw new SalarieException("L'id du salarie ne correspond pas");
-        }
-
-        salairieService.updateSalarieAideADomicile(salarieAideADomicile);
-        model.addAttribute("salariees", salairieService.getSalaries());
-        return "list";
-    }
-
-
-    @GetMapping(value = "/salaries")
-    public String salaries(
-            @RequestParam(required = false) String page,
-            @RequestParam(required = false) String size,
-            @RequestParam(required = false) String sortProperty,
-            @RequestParam(required = false) String sortDirection,
-            @RequestParam(required = false) String nom,
-            final ModelMap model) {
-        int currentPage;
-        int pageSize;
-        List<SalarieAideADomicile> listSalaries = Collections.emptyList();
-        Page<SalarieAideADomicile> salaries = new PageImpl<> (listSalaries);
-
-
-        if(page != null){
-            currentPage = Integer.parseInt(page);
-        }
-        else{
-            currentPage = 0;
-        }
-        if(size != null){
-            pageSize = Integer.parseInt(size);
-        }
-        else{
-            pageSize = 10;
-        }
-        if(nom != null){
-            listSalaries = salairieService.getSalaries(nom, PageRequest.of(currentPage, pageSize, Sort.by("id")));
-        }
-        else{
-            salaries = salairieService.getSalaries(
-                    PageRequest.of(currentPage, pageSize, Sort.by("id")));
-        }
-
-
-        if(Objects.equals(sortProperty, "id")){
-            if (Objects.equals(sortDirection, "ASC")) {
-                salaries = salairieService.getSalaries(
-                        PageRequest.of(currentPage, pageSize, Sort.by("id").ascending())
-                );
-            } else {
-                salaries = salairieService.getSalaries(
-                        PageRequest.of(currentPage, pageSize, Sort.by("id").descending())
-                );
-            }
-        }
-        else if(Objects.equals(sortProperty, "nom")){
-            if (Objects.equals(sortDirection, "ASC")) {
-                salaries = salairieService.getSalaries(
-                        PageRequest.of(currentPage, pageSize, Sort.by("nom").ascending())
-                );
-            } else {
-                salaries = salairieService.getSalaries(
-                        PageRequest.of(currentPage, pageSize, Sort.by("nom").descending())
-                );
-            }
-        }
-        model.put("currentPage", currentPage);
-        model.put("maxPage", Math.ceil((float) salairieService.countSalaries()/pageSize));
-        model.put("salarieCount", salairieService.countSalaries());
-        if(nom != null){
-            model.put("salaries",listSalaries);
-        }
-        else{
-            model.put("salaries",salaries);
-        }
-        model.put("title","Gestion des salariés");
-
-        return "list";
-    }
-
-
-
-
-
-
-
-
-
-    @PostMapping(value = "/salaries/save")
-    public String salarieSaveForm(@ModelAttribute SalarieAideADomicile salarieAideADomicile) throws SalarieException {
-        if(salarieAideADomicile.getId() != null){
-            try{
-                if(salarieAideADomicile.getNom().isEmpty()){
-                    throw new DataIntegrityViolationException ("Empty name");
-                }
-                salairieService.updateSalarieAideADomicile(salarieAideADomicile);
-                //error = false;
-            }
-            catch (DataIntegrityViolationException e){
-                //error = true;
-            }
-        }
-        else{
-            try{
-                if(salarieAideADomicile.getNom().isEmpty()){
-                    throw new DataIntegrityViolationException("Empty name");
-                }
-                SalarieAideADomicile _salarieAideADomicile = salairieService.creerSalarieAideADomicile(salarieAideADomicile);
-                //error = false;
-                return "redirect:/salaries/" + _salarieAideADomicile.getId();
-            }
-            catch (DataIntegrityViolationException e){
-                //error = true;
-                return "redirect:/salaries/aide/new";
-            }
-        }
-        return "redirect:/salaries/" + salarieAideADomicile.getId();
-    }
-
-
-    // chercher par nom
 
 
 
 }
+
 
 

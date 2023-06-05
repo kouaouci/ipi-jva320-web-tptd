@@ -10,22 +10,27 @@
 
     <h2>Détail du salarié</h2>
 
-    <form id="saveForm" action="http://localhost:8080/salaries/save" method="post" class="row" th:object="${salarie}">
+    <form id="saveForm" action="#" th:action="${action} == 'save' ? @{/salaries/save} : @{/salaries/update?id={id}(id=${details.id})}"
+          th:object="${salarie}" method="post" class="row">
 
         <div class="col-lg-6">
             <div class="form-group">
                 <label class="form-control-label" for="id">ID</label>
-                <input type="text" th:value="*{id}" class="form-control" name="id" id="id" readonly="true">
+                <input required type="text" th:field="*{id}" th:value="${details.id}" class="form-control" name="id"
+                       id="id" disabled="true">
 
                 <label class="form-control-label" for="nom">Nom</label>
-                <input type="text" th:value="*{nom}" class="form-control" name="nom" id="nom">
+                <input required type="text" th:field="*{nom}" th:value="${details.nom}" class="form-control" name="nom"
+                       id="nom">
 
                 <label class="form-control-label" for="nom">moisEnCours</label>
-                <input type="date" th:value="*{moisEnCours}" class="form-control" name="moisEnCours"
+                <input required type="date" th:field="*{moisEnCours}" th:value="${details.moisEnCours}"
+                       class="form-control" name="moisEnCours"
                        id="moisEnCours">
 
                 <label class="form-control-label" for="nom">moisDebutContrat</label>
-                <input type="date" th:value="*{moisDebutContrat}" class="form-control" name="moisDebutContrat" id="moisDebutContrat">
+                <input required type="date" th:field="*{moisDebutContrat}" th:value="${details.moisDebutContrat}"
+                       class="form-control" name="moisDebutContrat" id="moisDebutContrat">
             </div>
         </div>
 
@@ -35,17 +40,20 @@
                 <div>
                     <label class="form-control-label" for="nom">joursTravaillesAnneeN</label>
                     <div class="input-group">
-                        <input type="number" step="0.5" th:value="*{joursTravaillesAnneeN}" class="form-control" name="joursTravaillesAnneeN" id="joursTravaillesAnneeN">
+                        <input required type="number" step="0.5" th:field="*{joursTravaillesAnneeN}"
+                               th:value="${details.joursTravaillesAnneeN}" class="form-control"
+                               name="joursTravaillesAnneeN" id="joursTravaillesAnneeN">
                         <div class="input-group-append">
                             <span class="input-group-text">j</span>
                         </div>
                     </div>
                 </div>
-
                 <div>
                     <label class="form-control-label" for="nom">congesPayesAcquisAnneeN</label>
                     <div class="input-group">
-                        <input type="number" step="0.5" th:value="*{congesPayesAcquisAnneeN}" class="form-control" name="congesPayesAcquisAnneeN" id="congesPayesAcquisAnneeN">
+                        <input required type="number" step="0.5" th:field="*{congesPayesAcquisAnneeN}"
+                               th:value="${details.congesPayesAcquisAnneeN}" class="form-control"
+                               name="congesPayesAcquisAnneeN" id="congesPayesAcquisAnneeN">
                         <div class="input-group-append">
                             <span class="input-group-text">j</span>
                         </div>
@@ -59,7 +67,9 @@
             <div>
                 <label class="form-control-label" for="nom">joursTravaillesAnneeNMoins1</label>
                 <div class="input-group">
-                    <input type="number" step="0.5" th:value="*{joursTravaillesAnneeNMoins1}" class="form-control" name="joursTravaillesAnneeNMoins1" id="joursTravaillesAnneeNMoins1">
+                    <input required type="number" step="0.5" th:field="*{joursTravaillesAnneeNMoins1}"
+                           th:value="${details.joursTravaillesAnneeNMoins1}" class="form-control"
+                           name="joursTravaillesAnneeNMoins1" id="joursTravaillesAnneeNMoins1">
                     <div class="input-group-append">
                         <span class="input-group-text">j</span>
                     </div>
@@ -69,7 +79,9 @@
             <div>
                 <label class="form-control-label" for="nom">congesPayesAcquisAnneeNMoins1</label>
                 <div class="input-group">
-                    <input type="number" step="0.5" th:value="*{congesPayesAcquisAnneeNMoins1}" class="form-control" name="congesPayesAcquisAnneeNMoins1" id="congesPayesAcquisAnneeNMoins1">
+                    <input required type="number" step="0.5" th:field="*{congesPayesAcquisAnneeNMoins1}"
+                           th:value="${details.congesPayesAcquisAnneeNMoins1}" class="form-control"
+                           name="congesPayesAcquisAnneeNMoins1" id="congesPayesAcquisAnneeNMoins1">
                     <div class="input-group-append">
                         <span class="input-group-text">j</span>
                     </div>
@@ -79,7 +91,9 @@
             <div>
                 <label class="form-control-label" for="nom">congesPayesPrisAnneeNMoins1</label>
                 <div class="input-group">
-                    <input type="number" step="0.5" th:value="*{congesPayesPrisAnneeNMoins1}" class="form-control" name="congesPayesPrisAnneeNMoins1" id="congesPayesPrisAnneeNMoins1">
+                    <input required type="number" step="0.5" th:field="*{congesPayesPrisAnneeNMoins1}"
+                           th:value="${details.congesPayesPrisAnneeNMoins1}" class="form-control"
+                           name="congesPayesPrisAnneeNMoins1" id="congesPayesPrisAnneeNMoins1">
                     <div class="input-group-append">
                         <span class="input-group-text">j</span>
                     </div>
@@ -89,19 +103,23 @@
 
 
     </form>
-<!--
-    <div class="row" th:if="${error}">
-        <div class="col-lg-6">
-            <ul class="list-group list-unstyled">
-                <li class="alert alert-danger" role="alert">Erreur dans un champ !</li>
-            </ul>
+
+
+
+    <!--
+        <div class="row" th:if="${error}">
+            <div class="col-lg-6">
+                <ul class="list-group list-unstyled">
+                    <li class="alert alert-danger" role="alert">Erreur dans un champ !</li>
+                </ul>
+            </div>
         </div>
-    </div>
--->
+    -->
+
     <div class="row mt-2">
         <div class="col-lg-6">
             <input form="saveForm" class="btn btn-primary" type="submit" value="Enregistrer">
-            <a th:href="@{/salaries/{id}/delete(id=${salarie.id})}" class="btn btn-danger">Supprimer</a>
+            <a th:href="@{/salaries/{id}/delete(id=${details.id})}" class="btn btn-danger">Supprimer</a>
         </div>
     </div>
 
