@@ -13,8 +13,10 @@ import org.springframework.stereotype.Controller;
 
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.persistence.EntityNotFoundException;
 import java.security.Timestamp;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -40,20 +42,20 @@ public class SalairieController {
             model.put ( "details", salairie );
             model.addAttribute ( "salarie", salairie );
             System.out.println ( salairie );
-            return "detail_salarie";
+            return "detail_Salarie";
         }
 
     }
 
 
     @PostMapping("/salaries/save")
-    public String addNewSalarie(@ModelAttribute SalarieAideADomicile salarie, final ModelMap model) throws SalarieException {
+    public String addNewSalarie(@ModelAttribute SalarieAideADomicile salarieAideADomicile, final ModelMap model) throws SalarieException {
 
         System.out.println ( "hello" );
-        salairieService.creerSalarieAideADomicile ( salarie );
-        System.out.println ( salarie );
+        salairieService.creerSalarieAideADomicile ( salarieAideADomicile );
+
         model.addAttribute ( "salariees", salairieService.getSalaries () );
-      return  "redirect:/list";
+      return  "list.html";
 
     }
 
@@ -65,8 +67,8 @@ public class SalairieController {
 
         System.out.println ( salarie.getId () );
         salairieService.updateSalarieAideADomicile ( salarie );
-        model.addAttribute ( "salariess", salairieService.getSalaries () );
-        return "redirect:/list";
+        model.addAttribute ( "salariees", salairieService.getSalaries () );
+        return "list.html";
     }
 
 
@@ -82,7 +84,7 @@ public class SalairieController {
         return "detail_Salarie";
 
     }
-/*
+
     @RequestMapping("/salaries")
     public String redirectToListWithParams(@RequestParam(required = false, name = "nom") String nom,
                                            @RequestParam(required = false, name = "page", defaultValue = "1") int page,
@@ -111,13 +113,13 @@ public class SalairieController {
             model.put("disable", false);
         }
 
-        return "list";
-    }*/
+        return "list.html";
+    }
     // Récuperation de la liste des salaries
     @GetMapping(value="salaries")
     public String getSalaries(final ModelMap model) {
         model.addAttribute("salariees", salairieService.getSalaries());
-        return "list";
+        return "list.html";
     }
 
     @RequestMapping("/salaries/aide/new")
@@ -127,7 +129,7 @@ public class SalairieController {
         model.put("details",salarie );
        model.put("action", "save");
         model.addAttribute("salarie", new SalarieAideADomicile());
-        return "detail_Salarie";
+        return "detail_Salarie.html";
     }
 
     @GetMapping("/salaries/{id}/delete")
@@ -135,6 +137,8 @@ public class SalairieController {
         salairieService.deleteSalarieAideADomicile(id);
         return "redirect:/home";
     }
+
+
 
 
 
