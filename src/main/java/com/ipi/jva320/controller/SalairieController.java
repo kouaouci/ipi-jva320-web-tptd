@@ -132,13 +132,19 @@ public class SalairieController {
         return "detail_Salarie.html";
     }
 
-    @GetMapping("/salaries/{id}/delete")
+    @GetMapping("/salaries/{id}/delete}")
     public String deleteSalarie(@PathVariable Long id) throws SalarieException {
         salairieService.deleteSalarieAideADomicile(id);
         return "redirect:/home";
     }
 
-
+    @RequestMapping(value = "/salarie/findByNom")
+    public ModelAndView findSalariesByNom(String name){
+        ModelAndView modelAndView = new ModelAndView("list");
+        List<SalarieAideADomicile> salarieAideADomicileList = salairieService.getSalaries(name);
+        modelAndView.addObject("salaries",salarieAideADomicileList);
+        return modelAndView;
+    }
 
 
 
