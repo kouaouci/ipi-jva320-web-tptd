@@ -116,11 +116,11 @@ public class SalairieController {
         return "list.html";
     }
     // Récuperation de la liste des salaries
-    @GetMapping(value="salaries")
+    /*@GetMapping(value="salaries")
     public String getSalaries(final ModelMap model) {
-        model.addAttribute("salariees", salairieService.getSalaries());
+        model.addAttribute("salariees",  salairieService.getSalaries());
         return "list.html";
-    }
+    }*/
 
     @RequestMapping("/salaries/aide/new")
     public String redirectToAdd(final ModelMap model) {
@@ -132,19 +132,19 @@ public class SalairieController {
         return "detail_Salarie.html";
     }
 
-    @GetMapping("/salaries/{id}/delete}")
+    @GetMapping("/salaries/{id}/delete")
     public String deleteSalarie(@PathVariable Long id) throws SalarieException {
         salairieService.deleteSalarieAideADomicile(id);
         return "redirect:/home";
     }
 
-    @RequestMapping(value = "/salarie/findByNom")
+   /* @RequestMapping(value = "/salarie/findByNom")
     public ModelAndView findSalariesByNom(String name){
         ModelAndView modelAndView = new ModelAndView("list");
         List<SalarieAideADomicile> salarieAideADomicileList = salairieService.getSalaries(name);
         modelAndView.addObject("salaries",salarieAideADomicileList);
         return modelAndView;
-    }
+    }*/
 
 
 
