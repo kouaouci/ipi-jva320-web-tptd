@@ -14,10 +14,11 @@
                 <thead>
                 <tr>
                     <th scope="col">ID
-                        <a href="/salaries?page=0&size=10&sortProperty=id&sortDirection=DESC"><i class="fa fa-chevron-up"></i></a>
+                        <a th:href="@{/salaries?page={page}&sortDirection={sort}(page = ${page}, sort = ${sortdir} == 'asc' ? 'desc' : 'asc')}"><i class="fa fa-chevron-up"></i></a>
                     </th>
                     <th scope="col">Nom
-                        <a href="/salaries?page=0&size=10&sortProperty=nom&sortDirection=DESC"><i class="fa fa-chevron-up"></i></a>
+                        <a th:href="@{/salaries?page={page}&sortDirection={sortdir}&sortProperty=nom(page = ${page}, sortdir = ${sortdir} == 'asc' ? 'desc' : 'asc')}"><i class="fa fa-chevron-up"></i></a>
+
                     </th>
                     <th scope="col"></th>
                 </tr>
