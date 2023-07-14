@@ -6,7 +6,6 @@
 
 
 <div class="container">
-
     <div class="row">
         <div class="col-lg-12">
             <h1>Liste des salariés</h1>
@@ -27,7 +26,7 @@
                 <tr th:each="employee : ${salariees}">
                     <th scope="row"><span th:utext="${employee.id}"></span></th>
                     <td><span th:utext="${employee.nom}"></span></td>
-                    <td><a th:href="@{/salaries/aide/new(id=${employee.id})}" class="btn btn-primary ember-view">Détail</a></td>
+                    <td><a th:href="@{/salaries/{id}(id=${employee.id})}" class="btn btn-primary ember-view">Détail</a></td>
                 </tr>
                 </tbody>
             </table>

@@ -63,9 +63,11 @@ public class SalairieController {
     public String updateSalarie(@ModelAttribute SalarieAideADomicile salarie, final ModelMap model, @RequestParam(required = false) Long id) throws SalarieException {
         if (id != null) {
             salarie.setId ( id );
+
         }
 
         System.out.println ( salarie.getId () );
+        System.out.println ( salarie.getNom () );
         salairieService.updateSalarieAideADomicile ( salarie );
         model.addAttribute ( "salariees", salairieService.getSalaries () );
         return "list.html";
@@ -116,11 +118,11 @@ public class SalairieController {
         return "list.html";
     }
     // Récuperation de la liste des salaries
-    /*@GetMapping(value="salaries")
+    @GetMapping(value="salaries")
     public String getSalaries(final ModelMap model) {
         model.addAttribute("salariees",  salairieService.getSalaries());
         return "list.html";
-    }*/
+    }
 
     @RequestMapping("/salaries/aide/new")
     public String redirectToAdd(final ModelMap model) {
